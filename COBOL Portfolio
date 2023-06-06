@@ -1,0 +1,70 @@
+      ******************************************************************
+      * Author:CH LI
+      * Date:JUNE 03, 2023
+      * Purpose:CST8283_310_312_PROJECT_1
+      * Tectonics: cobc
+      ******************************************************************
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. STUDENT-RECORD-PROGRAM.
+
+      *declares the ENVIRONMENT DIVISION, INPUT-OUT SECTION and
+      *FILE-CONTROL paragraph.
+      *used SELECT statement to establish the link between the
+      *COBOL program and the enternal file via a reference.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT STUDENT-RECORD-OUT
+               ASSIGN TO "../STUREC.TXT"
+               ORGANIZATION IS LINE SEQUENTIAL.
+
+       DATA DIVISION.
+       FILE SECTION.
+       FD STUDENT-RECORD-OUT.
+       01 STUDENT-RECORD.
+           05 STUDENT-NUMBER PIC 9(7).
+           05 TUITION-OWED PIC 9(5).
+           05 STUDENT-NAME PIC X(40).
+       WORKING-STORAGE SECTION.
+       01 CONTROL-FIELDS.
+           05 PROMPT-RESPONSE PIC A(1).
+
+       PROCEDURE DIVISION.
+       100-CREATE-STUDENT-RECORDS.
+           PERFORM 201-INITIATE-STUDENT-RECORDS.
+           PERFORM 202-CREATE-ONE-STUDENT-RECORD
+              UNTIL PROMPT-RESPONSE = "N" OR "n".
+           PERFORM 203-TERMINATE-STUDENT-RECORDS.
+           STOP RUN.
+
+       201-INITIATE-STUDENT-RECORDS.
+           PERFORM 301-OPEN-FILE.
+           PERFORM 302-PROMPT-NEW-RECORD.
+
+       202-CREATE-ONE-STUDENT-RECORD.
+           PERFORM 303-PROMPT-STUDENT-DATA.
+           PERFORM 304-WRITE-RECORD.
+           PERFORM 302-PROMPT-NEW-RECORD.
+
+       203-TERMINATE-STUDENT-RECORDS.
+           CLOSE STUDENT-RECORD-OUT.
+
+       301-OPEN-FILE.
+           OPEN OUTPUT STUDENT-RECORD-OUT.
+
+       302-PROMPT-NEW-RECORD.
+           DISPLAY "Do you want to create a new student record? (Y/N)".
+           ACCEPT PROMPT-RESPONSE.
+
+       303-PROMPT-STUDENT-DATA.
+           DISPLAY "Please enter the student number: ".
+           ACCEPT STUDENT-NUMBER.
+           DISPLAY "Please enter the tuition owed: ".
+           ACCEPT TUITION-OWED.
+           DISPLAY "Please enter the student name: ".
+           ACCEPT STUDENT-NAME.
+
+       304-WRITE-RECORD.
+           WRITE STUDENT-RECORD.
+
+       END PROGRAM STUDENT-RECORD-PROGRAM.
